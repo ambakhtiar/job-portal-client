@@ -7,6 +7,9 @@ import JobDetails from "../pages/JobDetails/JobDetails";
 import PrivateRoute from "./PrivateRoute";
 import JobApply from "../pages/JobApply/JobApply";
 import MyApplications from "../pages/MyApplications/MyApplications";
+import AddJob from "../pages/AddJob/AddJob";
+import MyPosatedJobs from "../pages/MyPosatedJobs/MyPosatedJobs";
+import ViewApplication from "../pages/ViewApplication/ViewApplication";
 
 const router = createBrowserRouter([
     {
@@ -29,7 +32,7 @@ const router = createBrowserRouter([
             {
                 path: '/jobs/:id',
                 element: <JobDetails></JobDetails>,
-                loader: ({ params }) => fetch(`http://localhost:5000/jobs/${params.id}`)
+                loader: ({ params }) => fetch(`https://job-portal-server-seven-mu.vercel.app/jobs/${params.id}`)
             },
             {
                 path: '/jonApply/:id',
@@ -38,6 +41,19 @@ const router = createBrowserRouter([
             {
                 path: '/myApplications',
                 element: <PrivateRoute><MyApplications></MyApplications></PrivateRoute>
+            },
+            {
+                path: '/addJob',
+                element: <PrivateRoute><AddJob></AddJob></PrivateRoute>
+            },
+            {
+                path: '/myPostedJobs',
+                element: <PrivateRoute><MyPosatedJobs></MyPosatedJobs></PrivateRoute>
+            },
+            {
+                path: '/viewApplication/:job_id',
+                element: <PrivateRoute><ViewApplication></ViewApplication></PrivateRoute>,
+                loader: ({ params }) => fetch(`https://job-portal-server-seven-mu.vercel.app/job-application/jobs/${params.job_id}`)
             }
         ]
     },

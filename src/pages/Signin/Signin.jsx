@@ -19,8 +19,8 @@ const Signin = () => {
 
         signInUser(email, password)
             .then(result => {
-                console.log(result);
-                navigate(from); pm
+                console.log(result.user);
+                navigate(from);
             })
             .catch(error => {
                 console.log(error);
