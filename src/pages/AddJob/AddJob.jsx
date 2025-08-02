@@ -1,22 +1,27 @@
 import Swal from 'sweetalert2';
 import useAuth from '../../hooks/useAuth';
+import { useNavigate } from 'react-router-dom';
 
 const AddJob = () => {
-
+    const navigate = useNavigate();
     const { user } = useAuth();
 
     const handleAddJob = e => {
         e.preventDefault();
         const formData = new FormData(e.target);
         // console.log(formData.entries())
-        const initialData = Object.fromEntries(formData.entries());
-        console.log(initialData)
-        const { min, max, currency, ...newJob } = initialData;
-        console.log(min, max, currency, newJob)
-        newJob.salaryRange = { min, max, currency }
+
+        let initialData = Object.fromEntries(formData.entries());
+        // console.log(initialData)
+
+        let { min, max, currency, ...newJob } = initialData;
+        // console.log(min, max, currency, newJob);
+
+        newJob.salaryRange = { min: parseInt(min), max: parseInt(max), currency };
+
         newJob.requirements = newJob.requirements.split('\n');
         newJob.responsibilities = newJob.responsibilities.split('\n')
-        console.log(newJob);
+        // console.log(newJob);
 
         fetch('https://job-portal-server-seven-mu.vercel.app/jobs', {
             method: 'POST',
@@ -29,13 +34,12 @@ const AddJob = () => {
             .then(data => {
                 if (data.insertedId) {
                     Swal.fire({
-                        position: "top-end",
                         icon: "success",
                         title: "Job Has been added.",
                         showConfirmButton: false,
                         timer: 1500
                     });
-                    navigate('/myPostedJobs')
+                    navigate('/myPostedJobs');
                 }
             })
     }
@@ -89,10 +93,10 @@ const AddJob = () => {
                         <label className="label">
                             <span className="label-text">Salary Range</span>
                         </label>
-                        <input type="text" name='min' placeholder="Min" className="input input-bordered w-full" required />
+                        <input type="number" name='min' placeholder="Min" className="input input-bordered w-full" required />
                     </div>
                     <div className="form-control">
-                        <input type="text" name='max' placeholder="Max " className="input input-bordered w-full" required />
+                        <input type="number" name='max' placeholder="Max " className="input input-bordered w-full" required />
                     </div>
                     <div className="form-control">
                         <select defaultValue="Currency" name="currency" className="select select-ghost w-full max-w-xs">
@@ -144,7 +148,7 @@ const AddJob = () => {
                     <label className="label">
                         <span className="label-text">HR Email</span>
                     </label>
-                    <input type="text" defaultValue={user?.email} name='hr_email' placeholder="HR Email" className="input input-bordered w-full" required />
+                    <input readOnly type="text" defaultValue={user?.email} name='hr_email' placeholder="HR Email" className="input input-bordered w-full" required />
                 </div>
                 {/* application Deadline */}
                 <div className="form-control flex flex-col">
